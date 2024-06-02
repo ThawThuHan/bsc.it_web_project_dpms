@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h2>Register</h2>
+        <form id="registerForm">
+            <input type="text" name="username" placeholder="Username" required><br>
+            <input type="email" name="email" placeholder="Email" required><br>
+            <input type="password" name="password" placeholder="Password" required><br>
+            <input type="text" name="full_name" placeholder="Full Name" required><br>
+            <input type="text" name="phone" placeholder="Phone Number" required><br>
+            <label for="dob">Date of Birth</label>
+            <input type="date" name="dob" id="dob" placeholder="Date of Birth" required><br>
+            <input type="text" name="address" placeholder="address" required> <br>
+            <label for="roleSelect">I am:</label>
+            <select name="role" id="roleSelect" required>
+                <option disabled selected hidden value="">select</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+            </select><br>
+            <input type="text" id="specialityInput" name="speciality" placeholder="Speciality"
+                style="display: none;"><br>
+            <button type="submit">Register</button>
+        </form>
+        <div><a href="index.html">back</a></div>
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('roleSelect').addEventListener('change', function () {
+            var specialityInput = document.getElementById('specialityInput');
+            if (this.value == 'doctor') {
+                specialityInput.style.display = 'block';
+            } else {
+                specialityInput.style.display = 'none';
+            }
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(this);
+            var jsonData = {};
+            formData.forEach((value, key) => jsonData[key] = value);
+
+            var passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+            if (!passwordRequirements.test(jsonData['password'])) {
+                alert('Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character.');
+                return;
+            }
+
+            fetch('http://localhost:5000/api/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(jsonData)
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('message').innerText = data.message;
+                    if (data.message === "User registered successfully") {
+                        window.location.href = 'login.html';
+                    }
+                });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Management System</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+
+<body>
+    <nav>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </nav>
+    <div class="container">
+        <h1>Welcome to the Health Management System</h1>
+    </div>
+    <script>
+        fetch('http://localhost:5000/api/welcome')
+            .then(respone => respone.json())
+            .then(data => console.log(data['message']))
+    </script>
+</body>
+
+</html>
